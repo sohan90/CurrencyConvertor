@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="130dp"
+    android:layout_margin="10dp"
+    app:cardElevation="5dp"
+    card_view:cardCornerRadius="8dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/currency"
+            android:textSize="18sp"
+            android:textStyle="bold|italic"/>
+
+        <TextView
+            android:id="@+id/currency"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/title"
+            android:text="EURO"
+            android:textSize="18sp"
+            android:textStyle="italic"/>
+
+        <ImageView
+            android:id="@+id/flag"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignBottom="@id/currency"
+            android:layout_alignTop="@id/currency"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/currency"
+            android:src="@drawable/sample_flag"/>
+
+        <TextView
+            android:id="@+id/amount_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_marginTop="10dp"
+            android:text="@string/amount_title"
+            android:textSize="18sp"
+            android:textStyle="bold|italic"
+            />
+
+        <TextView
+            android:id="@+id/amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/currency"
+            android:layout_below="@id/currency"
+            android:layout_marginTop="10dp"
+            android:text="1000"
+            android:textSize="18sp"
+            android:textStyle="bold|italic"/>
+
+        <Button
+            android:id="@+id/remove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/round_corner"
+            android:text="@string/sell"
+            android:textColor="@android:color/white"
+            android:textStyle="bold|italic"/>
+
+
+    </RelativeLayout>
+
+
+</android.support.v7.widget.CardView>
+
