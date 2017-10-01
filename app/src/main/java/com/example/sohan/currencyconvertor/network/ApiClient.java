@@ -64,7 +64,7 @@ public class ApiClient {
      * @param callBack
      * @param url
      */
-    public void getAllCountryInfo(ResponseHandler.ResponseCallBack<CountryInfo> callBack,
+    public void getAllCountryInfo(ResponseHandler.ResponseCallBack<List<CountryInfo>> callBack,
                           String url) {
         Call<List<CountryInfo>> call = mApiService.getAllCountry(url);
         ResponseHandler<List<CountryInfo>> handler = new ResponseHandler<>(callBack);

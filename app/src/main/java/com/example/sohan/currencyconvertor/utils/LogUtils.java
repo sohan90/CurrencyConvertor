@@ -8,7 +8,7 @@ import android.util.Log;
 
 public class LogUtils {
 
-    public static final boolean ENABLE_LOG = false;
+    public static final boolean ENABLE_LOG = true;
 
     public static void LOGD(final String tag, String message) {
         if (ENABLE_LOG) {

@@ -1,11 +1,20 @@
 <resources>
     <string name="app_name">CurrencyConvertor</string>
     <string name="base_url">http://api.evp.lt</string>
+    <string name="country_url">https://gist.githubusercontent.com/sohan90/aed3ca9305d5bcc317a9c1fd60139a0d/raw/6833f8d82a16b9848a7caed129a44909b920870d/gistfile1.txt</string>
+    <string name="country_flag_url">http://www.geognos.com/api/en/countries/flag/</string>
     <string name="no_network">No network</string>
     <string name="please_check_internet_connection">Please check your internet connection</string>
     <string name="ok">Ok</string>
     <string name="currency">Currency</string>
     <string name="amount_title">Amount</string>
     <string name="sell">Sell</string>
+    <string name="home_screen_title">CurrencyConvertor</string>
+    <string name="loading">Loading</string>
+    <string-array name="array_name">
+        <item>Array Item One</item>
+        <item>Array Item Two</item>
+        <item>Array Item Three</item>
+    </string-array>
     <!--https://gist.githubusercontent.com/sohan90/aed3ca9305d5bcc317a9c1fd60139a0d/raw/6833f8d82a16b9848a7caed129a44909b920870d/gistfile1.txt-->
 </resources>

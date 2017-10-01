@@ -17,17 +17,23 @@
     </android.support.design.widget.AppBarLayout>
 
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:orientation="vertical">
 
        <android.support.v7.widget.RecyclerView
+           android:id="@+id/recycler_view"
            android:layout_width="match_parent"
            android:layout_height="wrap_content">
        </android.support.v7.widget.RecyclerView>
-    </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </FrameLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

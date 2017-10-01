@@ -100,10 +100,12 @@ public class FragmentHelper {
      * @param containerViewId id of the container view where fragment should be added
      * @param fragment        fragment to add
      */
-    public static void addFragmentWithoutAnimation(FragmentManager fragmentManager, int containerViewId, Fragment fragment) {
+    public static void addFragmentWithoutAnimation(FragmentManager fragmentManager,
+                                                   int containerViewId, Fragment fragment) {
         if (fragmentManager != null) {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction = fragmentTransaction.add(containerViewId, fragment);
+            fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         }
     }

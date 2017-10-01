@@ -60,12 +60,12 @@
             android:layout_alignLeft="@id/currency"
             android:layout_below="@id/currency"
             android:layout_marginTop="10dp"
-            android:text="1000"
+            android:text="-----"
             android:textSize="18sp"
             android:textStyle="bold|italic"/>
 
         <Button
-            android:id="@+id/remove"
+            android:id="@+id/sell"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
