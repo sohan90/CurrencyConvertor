@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.sohan.currencyconvertor.R;
-import com.example.sohan.currencyconvertor.model.CountryInfo;
+import com.example.sohan.currencyconvertor.models.CountryInfo;
 import com.example.sohan.currencyconvertor.utils.LogUtils;
 
 import java.util.List;

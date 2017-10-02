@@ -1,13 +1,15 @@
 package com.example.sohan.currencyconvertor.modules.homescreen.contract;
 
+import android.text.TextUtils;
+
 import com.example.sohan.currencyconvertor.common.Constants;
-import com.example.sohan.currencyconvertor.model.CountryInfo;
-import com.example.sohan.currencyconvertor.model.CurrencyConvertor;
+import com.example.sohan.currencyconvertor.models.CountryInfo;
+import com.example.sohan.currencyconvertor.models.CurrencyConvertor;
 import com.example.sohan.currencyconvertor.network.ResponseHandler;
 import com.example.sohan.currencyconvertor.repository.CurrencyConvertorInteractorImpl;
 import com.example.sohan.currencyconvertor.utils.LogUtils;
 
-import java.util.List;
+import java.text.DecimalFormat;
 
 /**
  * Presenter class for CurrencyConvertorFragment class
@@ -39,6 +41,7 @@ public class CurrencyConvertorImpl {
                         String fromAmountMsg = amount + " " + fromCurrency.getIsoCode();
                         String toAmountMsg = currencyConvertor.getAmount() + " " + currencyConvertor.getCurrency();
                         String commissionFee = getCommissionFee(amount);
+                        updateTotalCommisionFeeinPref(commissionFee);
                         mView.onCurrencyConversionSuccess(fromAmountMsg, toAmountMsg, commissionFee);
                     }
                 }
@@ -54,6 +57,27 @@ public class CurrencyConvertorImpl {
                 }
             }, amount, fromCurrency.getIsoCode(), toCurrency.getIsoCode());
         }
+    }
+
+    private void updateTotalCommisionFeeinPref(String commissionFee) {
+        double commissFee = Double.valueOf(commissionFee);
+        String totalCommissionFee = mInterator.getToatlCommissionFee(mView.getContxt());
+        double updatedFee = commissFee;
+        if (!TextUtils.isEmpty(totalCommissionFee)) {
+            double feeFromPref = Double.valueOf(totalCommissionFee);
+            updatedFee = commissFee + feeFromPref;
+        }
+        DecimalFormat decimalFormat = new DecimalFormat(Constants.DECIMAL_FORMAT);
+        mView.updateTotalCommissionFee(decimalFormat.format(updatedFee));
+        mInterator.updateTotalCommissionFee(mView.getContxt(), decimalFormat.format(updatedFee));
+    }
+
+    public String getTotalCommsionFeeFromPref() {
+        String fee = null;
+        if (mInterator != null) {
+            fee = mInterator.getToatlCommissionFee(mView.getContxt());
+        }
+        return fee;
     }
 
     /**
@@ -101,7 +125,9 @@ public class CurrencyConvertorImpl {
         double afterDeductionFromSellingAmt = fromCurrentBalanceDouble - sellingAmtDouble;
         double finalAmount = afterDeductionFromSellingAmt;
         if (totalTransactionFromPref >= Constants.FREE_TRANSACTION_LIMIT) {
-            finalAmount = caluclateCommissionFee(afterDeductionFromSellingAmt);
+            double commissionFee = caluclateCommissionFee(Double.valueOf(sellingAmount));
+            finalAmount = afterDeductionFromSellingAmt - commissionFee;
+
         }
         return finalAmount;
     }
@@ -140,10 +166,12 @@ public class CurrencyConvertorImpl {
      * @return commission fee returning in string since we gonna show in message
      */
     private String getCommissionFee(String amount) {
+        DecimalFormat decimalFormat = new DecimalFormat(Constants.DECIMAL_FORMAT);
         int totalTrans = mInterator.getTotalTransactionFromPref(mView.getContxt());
         String commissinFee;
         if (totalTrans > Constants.FREE_TRANSACTION_LIMIT) {
-            commissinFee = String.valueOf(caluclateCommissionFee(Double.valueOf(amount)));
+            double commFeeDble = caluclateCommissionFee(Double.valueOf(amount));
+            commissinFee = decimalFormat.format(commFeeDble);
         } else {
             commissinFee = "0.0";
         }
@@ -153,12 +181,13 @@ public class CurrencyConvertorImpl {
     private void updateCurrentBalanceRespectively(String sellingAmount, CountryInfo fromCurrency,
                                                   CountryInfo toCurrency, CurrencyConvertor currencyConvertor) {
 
+        DecimalFormat twoPlacesDecFormat = new DecimalFormat(Constants.DECIMAL_FORMAT);
         double curr = debitCurrentBalance(sellingAmount, fromCurrency);
-        String currentBalance = String.valueOf(curr);
+        String currentBalance = twoPlacesDecFormat.format(curr);
         fromCurrency.setmCurrentBalance(currentBalance);
 
         double toCurr = creditCurrentBalance(toCurrency.getmCurrentBalance(), currencyConvertor.getAmount());
-        String toCurrenBalance = String.valueOf(toCurr);
+        String toCurrenBalance = twoPlacesDecFormat.format(toCurr);
         toCurrency.setmCurrentBalance(toCurrenBalance);
     }
 }

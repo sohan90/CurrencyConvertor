@@ -1,7 +1,7 @@
 package com.example.sohan.currencyconvertor.network;
 
-import com.example.sohan.currencyconvertor.model.CountryInfo;
-import com.example.sohan.currencyconvertor.model.CurrencyConvertor;
+import com.example.sohan.currencyconvertor.models.CountryInfo;
+import com.example.sohan.currencyconvertor.models.CurrencyConvertor;
 
 import java.util.List;
 

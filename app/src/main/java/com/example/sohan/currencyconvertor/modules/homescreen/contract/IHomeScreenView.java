@@ -2,7 +2,7 @@ package com.example.sohan.currencyconvertor.modules.homescreen.contract;
 
 import android.content.Context;
 
-import com.example.sohan.currencyconvertor.model.CountryInfo;
+import com.example.sohan.currencyconvertor.models.CountryInfo;
 
 import java.util.List;
 
@@ -17,6 +17,7 @@ public interface IHomeScreenView {
     void updateToolBar(String title);
     void hideActivityViews();
     void udpateAdapterDataFromFragment();
+    void addCountryForCurrentBalance(CountryInfo countryInfo);
     Context getCtxt();
 
 

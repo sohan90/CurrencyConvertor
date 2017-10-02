@@ -4,8 +4,8 @@ import android.content.Context;
 
 import com.example.sohan.currencyconvertor.common.Constants;
 import com.example.sohan.currencyconvertor.database.PreferenceHelper;
-import com.example.sohan.currencyconvertor.model.CountryInfo;
-import com.example.sohan.currencyconvertor.model.CurrencyConvertor;
+import com.example.sohan.currencyconvertor.models.CountryInfo;
+import com.example.sohan.currencyconvertor.models.CurrencyConvertor;
 import com.example.sohan.currencyconvertor.network.ApiClient;
 import com.example.sohan.currencyconvertor.network.ResponseHandler;
 
@@ -41,6 +41,14 @@ public class CurrencyConvertorInteractorImpl {
         PreferenceHelper.storeListOfObject(context,Constants.PREF_CURRENT_BAL_LIST, list);
     }
 
+    public List<CountryInfo> getAllCountryListFromPref(Context context) {
+        return PreferenceHelper.getListOfObject(context, Constants.PREF_ALL_CURRENT_LIST);
+    }
+
+    public void setAllCountryListToPref(Context context, List<CountryInfo> list) {
+        PreferenceHelper.storeListOfObject(context,Constants.PREF_ALL_CURRENT_LIST, list);
+    }
+
     public void convertCurrency(ResponseHandler.ResponseCallBack<CurrencyConvertor> callBack,
                                 String amount, String fromCurrency, String toCurrency) {
 
@@ -54,6 +62,14 @@ public class CurrencyConvertorInteractorImpl {
 
     public int getTotalTransactionFromPref(Context context){
        return PreferenceHelper.getPrefInt(context, Constants.PREF_TOTAL_TRANS_KEY);
+    }
+
+    public void updateTotalCommissionFee(Context context, String totalCommissionFee) {
+        PreferenceHelper.storePrefString(context, Constants.PREF_TOTAL_COMMISSION_KEY, totalCommissionFee);
+    }
+
+    public String getToatlCommissionFee(Context context) {
+        return PreferenceHelper.getPrefString(context, Constants.PREF_TOTAL_COMMISSION_KEY);
     }
 }
 

@@ -9,7 +9,7 @@ import android.view.View;
 
 import com.example.sohan.currencyconvertor.R;
 import com.example.sohan.currencyconvertor.common.BaseActivity;
-import com.example.sohan.currencyconvertor.model.CountryInfo;
+import com.example.sohan.currencyconvertor.models.CountryInfo;
 import com.example.sohan.currencyconvertor.modules.homescreen.contract.HomeScreenPresenterImpl;
 import com.example.sohan.currencyconvertor.modules.homescreen.contract.IHomeScreenView;
 import com.example.sohan.currencyconvertor.repository.CurrencyConvertorInteractorImpl;
@@ -51,10 +51,15 @@ public class HomeScreenActivity extends BaseActivity implements IHomeScreenView 
         initUi();
         setPresenter();
         if (mPresenter.getCurrentBalanceListFromPref() == null) { // initially list will be  null
-            fetchAllCountryList();// api call
+            fetchAllCountryList();// api call only for the first time then retrieving it from preference
         } else {
             updateAdapterFromPref();
+            updateCountryListFromPref();
         }
+    }
+
+    private void updateCountryListFromPref() {
+        mAllCountryInfoList = mPresenter.getAllCountryInfoFromPref();
     }
 
     private void updateAdapterFromPref() {
@@ -102,7 +107,11 @@ public class HomeScreenActivity extends BaseActivity implements IHomeScreenView 
 
     @OnClick(R.id.fab)
     public void onAddCountryClick(View view) {
-        //show country list dialog fragment
+        if (mAllCountryInfoList != null && mAllCountryInfoList.size() != 0) {
+            List<CountryInfo> list = mPresenter.removeAlreadyAddedCurrency(mCurrentBalanceList, mAllCountryInfoList);
+            CountryListDialogFragment dialogFragment = CountryListDialogFragment.getInstance(list);
+            dialogFragment.show(getSupportFragmentManager(), null);
+        }
     }
 
     private void fetchAllCountryList() {
@@ -130,10 +139,11 @@ public class HomeScreenActivity extends BaseActivity implements IHomeScreenView 
     @Override
     public void updateCurrentBalanceAdapter(List<CountryInfo> countryInfoList) {
         LogUtils.LOGD(TAG, "AllCountryListSize" + countryInfoList.size());
-        mAllCountryInfoList = countryInfoList;
+        mAllCountryInfoList = new ArrayList<>(countryInfoList);
         mCurrentBalanceList = mPresenter.getCurrentBalanceList(countryInfoList);
         LogUtils.LOGD(TAG, "currentBalanceListSize " + countryInfoList.size());
         mAdapter.setData(mCurrentBalanceList); // updating the adapter  with currentBalanceList here
+        saveCurrentBalanceListToPref();
     }
 
     @Override
@@ -166,10 +176,23 @@ public class HomeScreenActivity extends BaseActivity implements IHomeScreenView 
      */
     @Override
     public void udpateAdapterDataFromFragment() {
-        /*saving to preference as list's  respective model are updated in currency convertor fragment*/
-        mPresenter.saveCurrentBalaneListToPref(mCurrentBalanceList);
+        saveCurrentBalanceListToPref();
         if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void saveCurrentBalanceListToPref(){
+        /*saving to preference as list's  respective model are updated in currency convertor fragment*/
+        mPresenter.saveCurrentBalaneListToPref(mCurrentBalanceList);
+    }
+
+    @Override
+    public void addCountryForCurrentBalance(CountryInfo countryInfo) {
+        if (countryInfo != null) {
+            mCurrentBalanceList.add(countryInfo);
+            saveCurrentBalanceListToPref();
+            mAdapter.setData(mCurrentBalanceList); // update adapter
         }
     }
 

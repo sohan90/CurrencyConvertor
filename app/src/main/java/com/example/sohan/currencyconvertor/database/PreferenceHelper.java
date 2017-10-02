@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
-import com.example.sohan.currencyconvertor.model.CountryInfo;
+import com.example.sohan.currencyconvertor.models.CountryInfo;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -18,8 +18,12 @@ public class PreferenceHelper {
     private static final String PREF_NAME = "merchant_pref";
 
     public static String getPrefString(Context context, String key) {
-        SharedPreferences sp = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-        return sp.getString(key, "");
+        String value= null;
+        if (containsKey(context, key)) {
+            SharedPreferences sp = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+            value = sp.getString(key,  "");
+        }
+        return value;
     }
 
     public static void storePrefString(Context context, String key, String value) {

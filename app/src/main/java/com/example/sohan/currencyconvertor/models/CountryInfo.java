@@ -1,4 +1,4 @@
-package com.example.sohan.currencyconvertor.model;
+package com.example.sohan.currencyconvertor.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

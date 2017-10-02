@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,7 @@ import android.widget.TextView;
 import com.example.sohan.currencyconvertor.R;
 import com.example.sohan.currencyconvertor.common.BaseFragment;
 import com.example.sohan.currencyconvertor.common.Constants;
-import com.example.sohan.currencyconvertor.model.CountryInfo;
+import com.example.sohan.currencyconvertor.models.CountryInfo;
 import com.example.sohan.currencyconvertor.modules.homescreen.contract.CurrencyConvertorImpl;
 import com.example.sohan.currencyconvertor.modules.homescreen.contract.ICurrencyConvertorView;
 import com.example.sohan.currencyconvertor.modules.homescreen.contract.IHomeScreenView;
@@ -61,6 +62,8 @@ public class CurrencyConvertorFragment extends BaseFragment implements ICurrency
     @BindView(R.id.selling_amount)
     EditText mSellingAmountEdt;
     private CurrencyConvertorImpl mPresenter;
+    @BindView(R.id.total_commission)
+    TextView mTotalCommissionTxt;
 
 
     public static CurrencyConvertorFragment getInstance(CountryInfo fromCurrency,
@@ -138,25 +141,30 @@ public class CurrencyConvertorFragment extends BaseFragment implements ICurrency
         String title = getString(R.string.success);
         String msg = getString(R.string.success_msg, fromAmountMsg, toAccountMsg, commisionFee,
                 String.valueOf(Constants.COMMISSION_FEE));
-        showDialogMsg(title, msg);
+        showDialogMsg(title, msg, true);
 
 
     }
 
     @Override
     public void onCurrencyConversionFailure(String error) {
-        showDialogMsg(getString(R.string.oh_sorry), getString(R.string.trans_failed));
+        showDialogMsg(getString(R.string.oh_sorry), getString(R.string.trans_failed), false);
     }
 
     @Optional
     @OnClick(R.id.sell)
     public void sell(View view) {
         String amount = mSellingAmountEdt.getText().toString();
-        boolean isValid = mPresenter.validateAmount(amount, mFromCurrency);
-        if (isValid) {
-            mPresenter.convertCurrency(amount, mFromCurrency, mToCurreny);
+        if (!TextUtils.isEmpty(amount)) {
+
+            boolean isValid = mPresenter.validateAmount(amount, mFromCurrency);
+            if (isValid) {
+                mPresenter.convertCurrency(amount, mFromCurrency, mToCurreny);
+            } else {
+                showDialogMsg(getString(R.string.oh_sorry), getString(R.string.low_bal_msg), false);
+            }
         } else {
-            showDialogMsg(getString(R.string.oh_sorry), getString(R.string.low_bal_msg));
+            showDialogMsg(getString(R.string.invalid_data), getString(R.string.enter_ur_amt), false);
         }
 
     }
@@ -169,6 +177,8 @@ public class CurrencyConvertorFragment extends BaseFragment implements ICurrency
         mCurrentBalTxt.setText(currentBal);
         updateToCurrencyBalance();
         mFromCurrencySymbolTxt.setText(mFromCurrency.getSymbol());
+        String totalFee = mPresenter.getTotalCommsionFeeFromPref();
+        updateTotalCommissionFee(totalFee);
 
     }
 
@@ -207,19 +217,25 @@ public class CurrencyConvertorFragment extends BaseFragment implements ICurrency
     }
 
     @Override
-    public void showDialogMsg(String title, String msg) {
+    public void showDialogMsg(String title, String msg, final boolean popBackStack) {
         DialogUtils.getInstance().showDefaultAlertDialog(getContext(), title, msg, getString(R.string.ok),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        if (getActivity() != null && mHomeScreenView != null) {
+                        if (getActivity() != null && mHomeScreenView != null && popBackStack) {
                             mHomeScreenView.udpateAdapterDataFromFragment();
                             getActivity().onBackPressed();
                         }
 
                     }
                 }, null, null, false);
+    }
+
+    @Override
+    public void updateTotalCommissionFee(String totalCommissionFee) {
+        String totalFee = getString(R.string.total_commission_fee, totalCommissionFee);
+        mTotalCommissionTxt.setText(totalFee);
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.example.sohan.currencyconvertor.modules.homescreen.contract;
 
 import android.text.TextUtils;
 
-import com.example.sohan.currencyconvertor.model.CountryInfo;
+import com.example.sohan.currencyconvertor.models.CountryInfo;
 import com.example.sohan.currencyconvertor.network.ResponseHandler;
 import com.example.sohan.currencyconvertor.repository.CurrencyConvertorInteractorImpl;
 
@@ -40,6 +40,7 @@ public class HomeScreenPresenterImpl {
                 mView.dimissProgress();
                 if (list != null && list.size() != 0) {
                     List<CountryInfo> filterList = getFilterList(list);
+                    saveAllCurrentListToPref(filterList);
                     mView.updateCurrentBalanceAdapter(filterList);
                 }
             }
@@ -64,6 +65,7 @@ public class HomeScreenPresenterImpl {
             if (countryInfo != null && countryInfo.getIsoCode() != null && countryInfo.getSymbol() != null) {
                 if (!countryInfo.getIsoCode().contains("none") && !countryInfo.getSymbol().contains("none")
                         && !TextUtils.isEmpty(countryInfo.getCountryName())) {
+                    countryInfo.setmCurrentBalance("0");
                     filterList.add(countryInfo);
                 }
             }
@@ -112,11 +114,12 @@ public class HomeScreenPresenterImpl {
 
     /**
      * Method return unique country info list
+     *
      * @param compareInfo country info
-     * @param list country info list
+     * @param list        country info list
      * @return unique list
      */
-    public List<CountryInfo> getUniqueCountryInf(CountryInfo compareInfo , List<CountryInfo> list){
+    public List<CountryInfo> getUniqueCountryInf(CountryInfo compareInfo, List<CountryInfo> list) {
         List<CountryInfo> uniqueList = new ArrayList<>();
         for (CountryInfo info : list) {
             if (!compareInfo.equals(info)) {
@@ -125,11 +128,36 @@ public class HomeScreenPresenterImpl {
         }
         return uniqueList;
     }
+
     public List<CountryInfo> getCurrentBalanceListFromPref() {
         return mInterator.getCurrentBalanceListFromPref(mView.getCtxt());
     }
 
     public void saveCurrentBalaneListToPref(List<CountryInfo> countryInfoList) {
         mInterator.setCurrentBalanceListToPref(mView.getCtxt(), countryInfoList);
+    }
+
+    public List<CountryInfo> getAllCountryInfoFromPref() {
+        return mInterator.getAllCountryListFromPref(mView.getCtxt());
+    }
+
+    public void saveAllCurrentListToPref(List<CountryInfo> countryInfoList) {
+        mInterator.setAllCountryListToPref(mView.getCtxt(), countryInfoList);
+    }
+
+    public List<CountryInfo> removeAlreadyAddedCurrency(List<CountryInfo> mCurrentBalanceList,
+                                                        List<CountryInfo> mAllCountryInfoList) {
+        List<CountryInfo> removedAlreadAddedList = new ArrayList<>(mAllCountryInfoList);
+        for (int i = 0; i < mCurrentBalanceList.size(); i++) {
+            for (int j = 0; j < removedAlreadAddedList.size(); j++) {
+                CountryInfo currentCountry = mCurrentBalanceList.get(i);
+                CountryInfo allCountry = removedAlreadAddedList.get(j);
+                if (allCountry.getCountryName().equalsIgnoreCase(currentCountry.getCountryName())) {
+                    removedAlreadAddedList.remove(allCountry);
+                }
+            }
+        }
+        return removedAlreadAddedList;
+
     }
 }

@@ -11,6 +11,7 @@ public interface ICurrencyConvertorView {
     void dimissProgress();
     void onCurrencyConversionSuccess(String fromAmountMsg, String toAmontMsg, String commissionFee);
     void onCurrencyConversionFailure(String error);
-    void showDialogMsg(String title, String msg);
+    void showDialogMsg(String title, String msg, boolean popBackStack);
+    void updateTotalCommissionFee(String totalCommissionFee);
     Context getContxt();
 }
