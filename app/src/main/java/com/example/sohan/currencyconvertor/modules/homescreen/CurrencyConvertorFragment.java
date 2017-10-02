@@ -1,6 +1,7 @@
 package com.example.sohan.currencyconvertor.modules.homescreen;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -14,10 +15,13 @@ import android.widget.TextView;
 
 import com.example.sohan.currencyconvertor.R;
 import com.example.sohan.currencyconvertor.common.BaseFragment;
+import com.example.sohan.currencyconvertor.common.Constants;
 import com.example.sohan.currencyconvertor.model.CountryInfo;
-import com.example.sohan.currencyconvertor.model.CurrencyConvertor;
+import com.example.sohan.currencyconvertor.modules.homescreen.contract.CurrencyConvertorImpl;
 import com.example.sohan.currencyconvertor.modules.homescreen.contract.ICurrencyConvertorView;
 import com.example.sohan.currencyconvertor.modules.homescreen.contract.IHomeScreenView;
+import com.example.sohan.currencyconvertor.repository.CurrencyConvertorInteractorImpl;
+import com.example.sohan.currencyconvertor.utils.DialogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +35,7 @@ import butterknife.Optional;
  * CurrencyConvertor fragment class .
  */
 
-public class CurrencyConvertorFragment extends BaseFragment implements ICurrencyConvertorView{
+public class CurrencyConvertorFragment extends BaseFragment implements ICurrencyConvertorView {
 
     public static final String FROM_CURRENCY_KEY = "from_currency_key";
     public static final String TO_CURRENCY_LIST_KEY = "to_currency_list_key";
@@ -56,9 +60,11 @@ public class CurrencyConvertorFragment extends BaseFragment implements ICurrency
     TextView mFromCurrencySymbolTxt;
     @BindView(R.id.selling_amount)
     EditText mSellingAmountEdt;
+    private CurrencyConvertorImpl mPresenter;
 
 
-    public static CurrencyConvertorFragment getInstance(CountryInfo fromCurrency, ArrayList<CountryInfo> toCurrencyList) {
+    public static CurrencyConvertorFragment getInstance(CountryInfo fromCurrency,
+                                                        ArrayList<CountryInfo> toCurrencyList) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(FROM_CURRENCY_KEY, fromCurrency);
         bundle.putParcelableArrayList(TO_CURRENCY_LIST_KEY, toCurrencyList);
@@ -78,7 +84,8 @@ public class CurrencyConvertorFragment extends BaseFragment implements ICurrency
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.currency_convertor_fragment, container, false);
     }
 
@@ -86,43 +93,71 @@ public class CurrencyConvertorFragment extends BaseFragment implements ICurrency
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initUi();
+        setPresenter();
         getBundleData();
         setData();
         setSpinnerData();
     }
 
+    private void setPresenter() {
+        CurrencyConvertorInteractorImpl interactor = CurrencyConvertorInteractorImpl.getInstance();
+        mPresenter = new CurrencyConvertorImpl(this, interactor);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mHomeScreenView != null) {
+            mHomeScreenView.updateToolBar(getString(R.string.currency_con_title));
+            mHomeScreenView.hideActivityViews();
+        }
+    }
+
     private void setSpinnerData() {
         ArrayAdapter<CountryInfo> arrayAdapter = new ArrayAdapter<>(getContext(),
                 R.layout.spinner_item, mToCurrencyList);
+        arrayAdapter.setDropDownViewResource(R.layout.spinner_drop_down_item);
         mSpinnerView.setAdapter(arrayAdapter);
         mSpinnerView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 mToCurreny = mToCurrencyList.get(position);
-                mToCurrencyTxt.setText(mToCurreny.getIsoCode());
+                updateToCurrencyBalance();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                mSpinnerView.setSelection(0);
             }
         });
     }
 
     @Override
-    public void onCurrencyConversionSuccess(CurrencyConvertor currencyConvertor) {
+    public void onCurrencyConversionSuccess(String fromAmountMsg, String toAccountMsg, String commisionFee) {
+
+        String title = getString(R.string.success);
+        String msg = getString(R.string.success_msg, fromAmountMsg, toAccountMsg, commisionFee,
+                String.valueOf(Constants.COMMISSION_FEE));
+        showDialogMsg(title, msg);
+
 
     }
 
     @Override
     public void onCurrencyConversionFailure(String error) {
-
+        showDialogMsg(getString(R.string.oh_sorry), getString(R.string.trans_failed));
     }
 
     @Optional
     @OnClick(R.id.sell)
     public void sell(View view) {
         String amount = mSellingAmountEdt.getText().toString();
+        boolean isValid = mPresenter.validateAmount(amount, mFromCurrency);
+        if (isValid) {
+            mPresenter.convertCurrency(amount, mFromCurrency, mToCurreny);
+        } else {
+            showDialogMsg(getString(R.string.oh_sorry), getString(R.string.low_bal_msg));
+        }
 
     }
 
@@ -130,11 +165,18 @@ public class CurrencyConvertorFragment extends BaseFragment implements ICurrency
         String currency = mFromCurrency.getIsoCode() + " " + mFromCurrency.getSymbol();
         mFromCurrencyHeaderTxt.setText(currency);
         mFromCurrencyTableTxt.setText(currency);
-        mCurrentBalTxt.setText(mFromCurrency.getmCurrentBalance());
-        String toCurrencyBalance = mToCurreny != null ? mToCurreny.getmCurrentBalance() : "0";
-        mToCurrentBalanceTxt.setText(toCurrencyBalance);
+        String currentBal = mFromCurrency.getmCurrentBalance() + " " + mFromCurrency.getSymbol();
+        mCurrentBalTxt.setText(currentBal);
+        updateToCurrencyBalance();
         mFromCurrencySymbolTxt.setText(mFromCurrency.getSymbol());
 
+    }
+
+    private void updateToCurrencyBalance() {
+        mToCurrencyTxt.setText(mToCurreny.getIsoCode());
+        String toCurrencyBalance = mToCurreny != null ? mToCurreny.getmCurrentBalance() : "0";
+        String toCurrencyBal = toCurrencyBalance + " " + mToCurreny.getSymbol();
+        mToCurrentBalanceTxt.setText(toCurrencyBal);
     }
 
     private void getBundleData() {
@@ -142,6 +184,9 @@ public class CurrencyConvertorFragment extends BaseFragment implements ICurrency
                 .containsKey(TO_CURRENCY_LIST_KEY)) {
             mFromCurrency = getArguments().getParcelable(FROM_CURRENCY_KEY);
             mToCurrencyList = getArguments().getParcelableArrayList(TO_CURRENCY_LIST_KEY);
+            if (mToCurrencyList != null) {
+                mToCurreny = mToCurrencyList.get(0);// setting default value
+            }
         }
     }
 
@@ -158,11 +203,27 @@ public class CurrencyConvertorFragment extends BaseFragment implements ICurrency
 
     @Override
     public void dimissProgress() {
-      super.hideProgress();
+        super.hideProgress();
     }
 
     @Override
-    public void showDialogMsg() {
+    public void showDialogMsg(String title, String msg) {
+        DialogUtils.getInstance().showDefaultAlertDialog(getContext(), title, msg, getString(R.string.ok),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        if (getActivity() != null && mHomeScreenView != null) {
+                            mHomeScreenView.udpateAdapterDataFromFragment();
+                            getActivity().onBackPressed();
+                        }
 
+                    }
+                }, null, null, false);
+    }
+
+    @Override
+    public Context getContxt() {
+        return getContext();
     }
 }

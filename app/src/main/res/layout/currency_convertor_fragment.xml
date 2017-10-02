@@ -1,217 +1,229 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:padding="10dp">
+    android:background="@android:color/white">
 
 
-    <TextView
-        android:id="@+id/from_currency"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_marginTop="20dp"
-        android:layout_toLeftOf="@+id/arrow"
-        android:background="@drawable/round_corner"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="EURO $"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        android:textStyle="bold|italic" />
-
-    <ImageView
-        android:id="@+id/arrow"
-        android:layout_width="70dp"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/from_currency"
-        android:layout_alignTop="@id/from_currency"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/direction_arrow" />
-
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/from_currency"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@id/from_currency"
-        android:layout_toRightOf="@id/arrow"
-        android:padding="10dp"
-        android:background="@drawable/spinner_bg" />
-
-
-    <LinearLayout
-        android:id="@+id/table"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:layout_below="@id/from_currency"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/red_border"
-        android:orientation="horizontal"
-        android:padding="5dp"
-        android:weightSum="2">
-
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@android:color/white"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@id/title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="From Currency"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold|italic" />
-
-            <TextView
-                android:id="@+id/currency"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="EURO"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"
-                android:textStyle="italic" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:text="Balance"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="italic|bold" />
-
-            <TextView
-                android:id="@+id/current_bal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="1000 $"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"
-                android:textStyle="italic" />
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="2dp"
-            android:layout_weight="1"
-            android:background="@android:color/white"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@id/title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="To Currency"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold|italic" />
-
-            <TextView
-                android:id="@+id/to_currency"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="EURO"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"
-                android:textStyle="italic" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:text="Balance"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="italic|bold" />
-
-            <TextView
-                android:id="@+id/to_balance"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="1000 $"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"
-                android:textStyle="italic" />
-
-
-        </LinearLayout>
-    </LinearLayout>
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/card_view"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_below="@id/table"
-        android:layout_marginTop="20dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="8dp">
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:padding="10dp">
 
             <TextView
-                android:id="@+id/symbol"
+                android:id="@+id/from_currency"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="20dp"
+                android:layout_toLeftOf="@+id/arrow"
+                android:background="@drawable/round_corner"
                 android:gravity="center"
-                android:text="$"
-                android:textColor="@android:color/black"
-                android:textSize="22sp"
-                android:textStyle="bold|italic" />
-
-            <EditText
-                android:id="@+id/selling_amount"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@id/symbol"
-                android:background="@null"
-                android:hint="Selling Amount"
-                android:inputType="number"
-                android:text=""
-                android:textColor="@android:color/black"
+                android:padding="10dp"
+                android:text="EURO $"
+                android:textColor="@android:color/white"
                 android:textSize="18sp"
                 android:textStyle="bold|italic" />
 
+            <ImageView
+                android:id="@+id/arrow"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/from_currency"
+                android:layout_alignTop="@id/from_currency"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/direction_arrow" />
 
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/from_currency"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@id/from_currency"
+                android:layout_toRightOf="@id/arrow"
+                android:background="@drawable/spinner_bg"
+                android:padding="10dp" />
+
+
+            <LinearLayout
+                android:id="@+id/table"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:layout_below="@id/from_currency"
+                android:layout_marginTop="50dp"
+                android:background="@drawable/red_border"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:weightSum="2">
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/white"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@id/title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="From Currency"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold|italic" />
+
+                    <TextView
+                        android:id="@+id/currency"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="EURO"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp"
+                        android:textStyle="italic" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:text="Balance"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        android:textStyle="italic|bold" />
+
+                    <TextView
+                        android:id="@+id/current_bal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="1000 $"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp"
+                        android:textStyle="italic" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="2dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/white"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@id/title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="To Currency"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold|italic" />
+
+                    <TextView
+                        android:id="@+id/to_currency"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="EURO"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp"
+                        android:textStyle="italic" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:text="Balance"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        android:textStyle="italic|bold" />
+
+                    <TextView
+                        android:id="@+id/to_balance"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="1000 $"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp"
+                        android:textStyle="italic" />
+
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_view"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_below="@id/table"
+                android:layout_marginTop="20dp"
+                app:cardCornerRadius="6dp"
+                app:cardElevation="6dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/symbol"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="$"
+                        android:textColor="@android:color/black"
+                        android:textSize="22sp"
+                        android:textStyle="bold|italic" />
+
+                    <EditText
+                        android:id="@+id/selling_amount"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="5dp"
+                        android:layout_toRightOf="@id/symbol"
+                        android:background="@null"
+                        android:hint="Selling Amount"
+                        android:inputType="number"
+                        android:text=""
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold|italic" />
+
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <Button
+                android:id="@+id/sell"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/card_view"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/round_corner"
+                android:text="@string/sell"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold|italic" />
         </RelativeLayout>
-
-    </android.support.v7.widget.CardView>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/round_corner"
-        android:text="@string/sell"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        android:textStyle="bold|italic" />
+    </ScrollView>
 
 
-</RelativeLayout>
+</LinearLayout>

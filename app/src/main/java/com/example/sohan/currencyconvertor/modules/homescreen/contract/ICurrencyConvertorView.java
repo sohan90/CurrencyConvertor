@@ -1,6 +1,6 @@
 package com.example.sohan.currencyconvertor.modules.homescreen.contract;
 
-import com.example.sohan.currencyconvertor.model.CurrencyConvertor;
+import android.content.Context;
 
 /**
  * View class for {@link com.example.sohan.currencyconvertor.modules.homescreen.CurrencyConvertorFragment}
@@ -9,7 +9,8 @@ import com.example.sohan.currencyconvertor.model.CurrencyConvertor;
 public interface ICurrencyConvertorView {
     void showProgress();
     void dimissProgress();
-    void onCurrencyConversionSuccess(CurrencyConvertor currencyConvertor);
+    void onCurrencyConversionSuccess(String fromAmountMsg, String toAmontMsg, String commissionFee);
     void onCurrencyConversionFailure(String error);
-    void showDialogMsg();
+    void showDialogMsg(String title, String msg);
+    Context getContxt();
 }

@@ -1,6 +1,8 @@
 package com.example.sohan.currencyconvertor.modules.homescreen;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -34,6 +36,8 @@ public class HomeScreenActivity extends BaseActivity implements IHomeScreenView 
 
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
+    @BindView(R.id.fab)
+    FloatingActionButton mFloatingBtn;
 
     AccountBalanceAdapter mAdapter;
     private HomeScreenPresenterImpl mPresenter;
@@ -46,7 +50,16 @@ public class HomeScreenActivity extends BaseActivity implements IHomeScreenView 
         setContentView(R.layout.activity_main);
         initUi();
         setPresenter();
-        fetchAllCountryList();
+        if (mPresenter.getCurrentBalanceListFromPref() == null) { // initially list will be  null
+            fetchAllCountryList();// api call
+        } else {
+            updateAdapterFromPref();
+        }
+    }
+
+    private void updateAdapterFromPref() {
+        mCurrentBalanceList = mPresenter.getCurrentBalanceListFromPref();
+        mAdapter.setData(mCurrentBalanceList);
     }
 
     private void setPresenter() {
@@ -78,10 +91,12 @@ public class HomeScreenActivity extends BaseActivity implements IHomeScreenView 
     }
 
     private void launchCurrencyConvetorFragment(CountryInfo fromCurrentAccount) {
+        List<CountryInfo> uniqueList = mPresenter.getUniqueCountryInf(fromCurrentAccount, mCurrentBalanceList);
         CurrencyConvertorFragment fragment = CurrencyConvertorFragment.getInstance(fromCurrentAccount,
-                (ArrayList<CountryInfo>) mCurrentBalanceList);
+                (ArrayList<CountryInfo>) uniqueList);
+
         FragmentHelper.replaceFragment(getSupportFragmentManager(), R.id.container,
-                 fragment, CURRENCY_CONVERTOR_FRAG_TAG, CURRENCY_CONVERTOR_FRAG_TAG);
+                fragment, CURRENCY_CONVERTOR_FRAG_TAG, CURRENCY_CONVERTOR_FRAG_TAG);
 
     }
 
@@ -107,6 +122,11 @@ public class HomeScreenActivity extends BaseActivity implements IHomeScreenView 
         DialogUtils.getInstance().hideProgressDialog();
     }
 
+    /**
+     * update respective data to adapter after the country info api call
+     *
+     * @param countryInfoList
+     */
     @Override
     public void updateCurrentBalanceAdapter(List<CountryInfo> countryInfoList) {
         LogUtils.LOGD(TAG, "AllCountryListSize" + countryInfoList.size());
@@ -114,5 +134,47 @@ public class HomeScreenActivity extends BaseActivity implements IHomeScreenView 
         mCurrentBalanceList = mPresenter.getCurrentBalanceList(countryInfoList);
         LogUtils.LOGD(TAG, "currentBalanceListSize " + countryInfoList.size());
         mAdapter.setData(mCurrentBalanceList); // updating the adapter  with currentBalanceList here
+    }
+
+    @Override
+    public void updateToolBar(String title) {
+        setToolBarTitle(title);
+    }
+
+    @Override
+    public void hideActivityViews() {
+        mFloatingBtn.setVisibility(View.INVISIBLE);
+    }
+
+    public void showActivityViews() {
+        mFloatingBtn.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (FragmentHelper.popBackStackImmediate(getSupportFragmentManager())) {
+            updateToolBar(getString(R.string.home_screen_title));
+            showActivityViews();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    /**
+     * After the currency conversion api call updating the adapter data to reflect the changes
+     * and save list to preference
+     */
+    @Override
+    public void udpateAdapterDataFromFragment() {
+        /*saving to preference as list's  respective model are updated in currency convertor fragment*/
+        mPresenter.saveCurrentBalaneListToPref(mCurrentBalanceList);
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public Context getCtxt() {
+        return this;
     }
 }

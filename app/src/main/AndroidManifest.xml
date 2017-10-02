@@ -12,7 +12,8 @@
         android:name=".common.CurrencyConvertorApplication"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".modules.homescreen.HomeScreenActivity">
+        <activity android:name=".modules.homescreen.HomeScreenActivity"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

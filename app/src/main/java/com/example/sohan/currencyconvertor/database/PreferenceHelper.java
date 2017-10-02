@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
+import com.example.sohan.currencyconvertor.model.CountryInfo;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -27,6 +28,24 @@ public class PreferenceHelper {
         editor.putString(key, value);
         editor.apply();
     }
+
+    public static int getPrefInt(Context context, String key) {
+        int value = 0;
+        if (containsKey(context, key)) {
+            SharedPreferences sp = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+            value = sp.getInt(key, 0);
+
+        }
+        return value;
+    }
+
+    public static void storePrefInt(Context context, String key, int value) {
+        SharedPreferences sp = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        Editor editor = sp.edit();
+        editor.putInt(key, value);
+        editor.apply();
+    }
+
 
     public static Boolean getPrefBool(Context context, String key) {
         if (context != null) {
@@ -59,7 +78,7 @@ public class PreferenceHelper {
         }
     }
 
-    public static void storeListOfObject(Context context, String key, List<Object> obj ) {
+    public static void storeListOfObject(Context context, String key, List<CountryInfo> obj) {
         String userPrefMapString = new Gson().toJson(obj);
         SharedPreferences sharedPreference = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         Editor sharedPrefEditor = sharedPreference.edit();
@@ -67,14 +86,14 @@ public class PreferenceHelper {
         sharedPrefEditor.apply();
     }
 
-    public static Object getListOfObject(Context context, String key) {
+    public static List<CountryInfo> getListOfObject(Context context, String key) {
         SharedPreferences sharedPreference = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         //get from shared prefs
         String storedHashMapString = sharedPreference.getString(key, "");
-        java.lang.reflect.Type type = new TypeToken<List<Object>>(){}.getType();
-        return new Gson().<List<Object>>fromJson(storedHashMapString, type);
+        java.lang.reflect.Type type = new TypeToken<List<CountryInfo>>() {
+        }.getType();
+        return new Gson().<List<CountryInfo>>fromJson(storedHashMapString, type);
     }
-
 
 
     public static void storeObject(Context context, String key, Object object) {

@@ -102,8 +102,34 @@ public class HomeScreenPresenterImpl {
             }
 
         }
-        List<CountryInfo> list = new ArrayList<>(currentBalanceList);
+        List<CountryInfo> list = null;
+        if (currentBalanceList != null) {
+            list = new ArrayList<>(currentBalanceList);
+        }
         return list;
 
+    }
+
+    /**
+     * Method return unique country info list
+     * @param compareInfo country info
+     * @param list country info list
+     * @return unique list
+     */
+    public List<CountryInfo> getUniqueCountryInf(CountryInfo compareInfo , List<CountryInfo> list){
+        List<CountryInfo> uniqueList = new ArrayList<>();
+        for (CountryInfo info : list) {
+            if (!compareInfo.equals(info)) {
+                uniqueList.add(info);
+            }
+        }
+        return uniqueList;
+    }
+    public List<CountryInfo> getCurrentBalanceListFromPref() {
+        return mInterator.getCurrentBalanceListFromPref(mView.getCtxt());
+    }
+
+    public void saveCurrentBalaneListToPref(List<CountryInfo> countryInfoList) {
+        mInterator.setCurrentBalanceListToPref(mView.getCtxt(), countryInfoList);
     }
 }
