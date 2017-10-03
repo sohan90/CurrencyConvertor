@@ -111,6 +111,7 @@ public class CurrencyConvertorFragment extends BaseFragment implements ICurrency
     public void onResume() {
         super.onResume();
         if (mHomeScreenView != null) {
+            super.setToolBarTitle(getString(R.string.currency_con_title));
             mHomeScreenView.updateToolBar(getString(R.string.currency_con_title));
             mHomeScreenView.hideActivityViews();
         }
