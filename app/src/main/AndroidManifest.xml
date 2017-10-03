@@ -14,14 +14,16 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".modules.splashscreen.SplashScreenActivity"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".modules.homescreen.HomeScreenActivity"/>
+        <activity android:name=".modules.homescreen.HomeScreenActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
