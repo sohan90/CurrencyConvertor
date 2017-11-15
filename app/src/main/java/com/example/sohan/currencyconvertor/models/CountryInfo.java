@@ -23,15 +23,6 @@ public class CountryInfo implements Parcelable{
 
     //for local reference
     private String mCurrentBalance;
-    private int dotsCount = 0;
-
-    public int getDotsCount() {
-        return dotsCount;
-    }
-
-    public void setDotsCount(int dotsCount) {
-        this.dotsCount = dotsCount;
-    }
 
     protected CountryInfo(Parcel in) {
         mCountryName = in.readString();
@@ -39,7 +30,6 @@ public class CountryInfo implements Parcelable{
         mSymbol = in.readString();
         mIsoCode = in.readString();
         mCurrentBalance = in.readString();
-        dotsCount = in.readInt();
     }
 
     public static final Creator<CountryInfo> CREATOR = new Creator<CountryInfo>() {
@@ -107,7 +97,6 @@ public class CountryInfo implements Parcelable{
         dest.writeString(mSymbol);
         dest.writeString(mIsoCode);
         dest.writeString(mCurrentBalance);
-        dest.writeInt(dotsCount);
     }
 
     @Override

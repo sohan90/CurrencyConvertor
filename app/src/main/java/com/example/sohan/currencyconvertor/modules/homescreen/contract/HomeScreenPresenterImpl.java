@@ -19,6 +19,7 @@ public class HomeScreenPresenterImpl {
     private final IHomeScreenView mView;
     private final CurrencyConvertorInteractorImpl mInterator;
 
+
     public HomeScreenPresenterImpl(IHomeScreenView view, CurrencyConvertorInteractorImpl interator) {
         this.mView = view;
         this.mInterator = interator;
